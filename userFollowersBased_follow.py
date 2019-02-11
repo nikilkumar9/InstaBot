@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.firefox.options import Options
 import time
 import mysql.connector
 import sys
@@ -14,8 +15,8 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-print(mydb)
 
+options = Options()
 # mycursor.execute("DROP TABLE table2")
 # mycursor.execute("CREATE TABLE table2 (date VARCHAR(255), profile VARCHAR(255), follower_number INTEGER (10), follower VARCHAR(255))")
 
@@ -30,7 +31,9 @@ class InstagramBot:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.driver = webdriver.Firefox()
+        # Instead of using GUI version of Firefox, use the headless one, for both client and server usecase
+        options.headless = True
+        self.driver = webdriver.Firefox(options=options)
 
     def closeBrowser(self):
             self.driver.close()
@@ -84,6 +87,11 @@ class InstagramBot:
         #     mycursor.execute(slqformula, follower)
         #     mydb.commit()
 
+        # Help find the profile follower link and generate the right follower list ul element
+        
+        # For reason, using "find_element_by_css_selector" will block by other elements, so just going to use JS instead
+        self.driver.execute_script('document.querySelector("a.-nal3").click()')
+        time.sleep(1.9)
 
         followersList = self.driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
         followerDiv = followersList.find_elements_by_css_selector('li')
@@ -151,4 +159,3 @@ for profileName in profiles:
     ig.followUsers(profileName)
 
 ig.closeBrowser()
-
