@@ -8,6 +8,11 @@ A collection of Python scripts that automates Firefox browser to log on to a Ins
   ```
 #### 2. Geckodriver
 Download, according to OS, from [here](https://github.com/mozilla/geckodriver/releases).
-  
-### Remark
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## Remark
 Code based on work originally from Github user tacomonster
