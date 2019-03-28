@@ -26,6 +26,7 @@ def print_same_line(text):
     sys.stdout.flush()
     sys.stdout.write(text)
     sys.stdout.flush()
+    sys.stdout.flush()
 
 class InstagramBot:
     def __init__(self, username, password):
@@ -76,7 +77,6 @@ class InstagramBot:
 
                 final_pic_hrefs = []
                 count = 0
-                #WHAT APPEND VALUE NIGGUH?
                 while count < photos_per_hashtag: # Number of photos per hashtag
                     final_pic_hrefs.append(pic_hrefs[count]) # adding first photos from count number of photos from gathered array to different array
                     count += 1
@@ -157,9 +157,9 @@ class InstagramBot:
 username = "example_username"
 password = "example_password"
 
-session_date = "27_dec"
+session_date = "28_Mar"
 photos_per_hashtag = 2
-hashtags = ['freelancing', 'happy']
+hashtags = ['life', 'football']
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
@@ -184,6 +184,6 @@ while True:
             hashtag_count += 1
             ig.follow_user()
 
-        print('UNCLE JEROME, ITS OVERRRRR')
+        print('InstaBot has COMPLETED liking and following profiles from stated hashtags!')
         ig.closeBrowser()
         time.sleep(120)
