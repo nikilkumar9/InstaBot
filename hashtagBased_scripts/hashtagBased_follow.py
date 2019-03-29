@@ -14,8 +14,6 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 print(mydb)
-
-print('')
 print('')
 
 # mycursor.execute("DROP TABLE table1")
@@ -104,7 +102,6 @@ class InstagramBot:
                 follower = (session_date, follow_count, following_username)
                 mycursor.execute(slqformula, follower)
                 mydb.commit()
-
                 time.sleep(1)
 
                 like_button = lambda: driver.find_element_by_xpath('//span[@aria-label="Like"]').click()
@@ -123,7 +120,6 @@ class InstagramBot:
             print()
 
 
-
     def follow_user(self):
         driver = self.driver
         print("Following users now")
@@ -137,13 +133,15 @@ class InstagramBot:
             driver.get("https://www.instagram.com/" + user_string + "/")
             hrefs_in_view = driver.find_elements_by_tag_name('a')
             hrefs_in_view = [elem.get_attribute('href') for elem in hrefs_in_view
-                             if '.com/p/' in elem.get_attribute('href')]
-            follow = driver.find_element_by_css_selector('button')
+                            if '.com/p/' in elem.get_attribute('href')]
+            follow = driver.find_element_by_css_selector('section.zwlfE button')
             if follow.text == "Follow":
                 follow.click()
                 usersfollowed += 1
                 print("Username: ", username, " followed")
                 print()
+            else:
+                print("User " + user_string + "has already been followed")
 
         print("Total number of users followed: ", usersfollowed)
 
@@ -154,36 +152,33 @@ class InstagramBot:
 #____________________________________________________________TO BE FILLED______________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
-username = "example_username"
-password = "example_password"
+username = "nickumarr"
+password = "Nikiltommy98"
 
-session_date = "28_Mar"
+session_date = "29_Mar"
 photos_per_hashtag = 2
-hashtags = ['life', 'football']
+hashtags = ['leomessi']
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 
 
-
+#________________________________________________________MAIN FUNCTION_________________________________________________________________
 ig = InstagramBot(username, password)
 ig.login()
 
-while True:
-        # Choose a random tag from the list of tags
-        # ig = InstagramBot(username, password)
-        # ig.login()
+# Choose a random tag from the list of tags
+hashtag_count = 0
+hashtags_array_count = len(hashtags)
 
-        hashtag_count = 0
-        hashtags_array_count = len(hashtags)
+while (hashtags_array_count > 0):
+    tag = hashtags[hashtag_count]
+    ig.like_photo(tag)
+    hashtags_array_count -= 1
+    hashtag_count += 1
+    ig.follow_user()
 
-        while (hashtags_array_count > 0):
-            tag = hashtags[hashtag_count]
-            ig.like_photo(tag)
-            hashtags_array_count -= 1
-            hashtag_count += 1
-            ig.follow_user()
-
-        print('InstaBot has COMPLETED liking and following profiles from stated hashtags!')
-        ig.closeBrowser()
-        time.sleep(120)
+print('InstaBot has COMPLETED liking and following profiles from stated hashtags!')
+ig.closeBrowser()
+time.sleep(1200)
+#______________________________________________________________________________________________________________________________________

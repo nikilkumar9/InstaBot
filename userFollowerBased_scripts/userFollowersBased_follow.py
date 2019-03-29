@@ -90,10 +90,10 @@ class InstagramBot:
         # Help find the profile follower link and generate the right follower list ul element
         
         # For reason, using "find_element_by_css_selector" will block by other elements, so just going to use JS instead
-        self.driver.execute_script('document.querySelector("a.-nal3").click()')
+        driver.execute_script('document.querySelector("a.-nal3").click()')
         time.sleep(1.9)
 
-        followersList = self.driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
+        followersList = driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
         followerDiv = followersList.find_elements_by_css_selector('li')
         print(followerDiv)
 
@@ -137,11 +137,11 @@ class InstagramBot:
 #________________________________________________________TO BE FILLED___________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
-username = "example_username"
-password = "example_password"
+username = "nickumarr"
+password = "Nikiltommy98"
 
 profiles = ['gerardpique_fcbarcelona']
-date = '09_Feb'
+date = '30_Mar'
 ##______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
@@ -159,3 +159,4 @@ for profileName in profiles:
     ig.followUsers(profileName)
 
 ig.closeBrowser()
+#______________________________________________________________________________________________________________________________________
