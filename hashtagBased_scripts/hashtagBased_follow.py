@@ -6,10 +6,10 @@ import mysql.connector
 import sys
 
 mydb = mysql.connector.connect(
-    host = "",
-    user = "",
-    password = "",
-    database = ""
+    host = "localhost",
+    user = "root",
+    password = "freehunterbot",
+    database = "fh_followcount"
 )
 
 mycursor = mydb.cursor()
@@ -17,7 +17,7 @@ print(mydb)
 print('')
 
 # mycursor.execute("DROP TABLE table1")
-# mycursor.execute("CREATE TABLE table1 (date VARCHAR(255), number INTEGER (10), username VARCHAR(255))")
+# mycursor.execute("CREATE TABLE table1 (date VARCHAR(255), hashtag VARCHAR(255), number INTEGER (10), username VARCHAR(255))")
 
 def print_same_line(text):
     sys.stdout.write('\r')
@@ -98,8 +98,8 @@ class InstagramBot:
                     following_username = a.get_attribute('title')
                     print("Photo Liked: ", pic_href, "from user ---------- ", following_username)
 
-                slqformula = "INSERT INTO table1 (date, number, username) VALUES (%s, %s, %s)"
-                follower = (session_date, follow_count, following_username)
+                slqformula = "INSERT INTO table1 (date, hashtag, number, username) VALUES (%s, %s, %s, %s)"
+                follower = (session_date, hashtag, follow_count, following_username)
                 mycursor.execute(slqformula, follower)
                 mydb.commit()
                 time.sleep(1)
@@ -120,12 +120,12 @@ class InstagramBot:
             print()
 
 
-    def follow_user(self):
+    def follow_user(self, hashtag):
         driver = self.driver
         print("Following users now")
         usersfollowed = 0
 
-        mycursor.execute("SELECT username FROM table1")
+        mycursor.execute("SELECT username FROM table1 where hashtag=%s and date=%s", (hashtag, session_date))
         username_data = mycursor.fetchall()
 
         for username in username_data:
@@ -144,6 +144,8 @@ class InstagramBot:
                 print("User " + user_string + "has already been followed")
 
         print("Total number of users followed: ", usersfollowed)
+        print("")
+        print("")
 
 
 
@@ -155,9 +157,9 @@ class InstagramBot:
 username = "example_username"
 password = "example_password"
 
-session_date = "29_Mar"
+session_date = "example_date"
 photos_per_hashtag = 2
-hashtags = ['leomessi']
+hashtags = ['example_hashtag1', 'example_hashtag2']
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
@@ -174,10 +176,10 @@ hashtags_array_count = len(hashtags)
 while (hashtags_array_count > 0):
     tag = hashtags[hashtag_count]
     ig.like_photo(tag)
+    ig.follow_user(tag)
     hashtags_array_count -= 1
     hashtag_count += 1
-    ig.follow_user()
-
+    
 print('InstaBot has COMPLETED liking and following profiles from stated hashtags!')
 ig.closeBrowser()
 time.sleep(1200)

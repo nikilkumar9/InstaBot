@@ -61,6 +61,7 @@ class InstagramBot:
                                 if '.com/p/' in elem.get_attribute('href')]
 
                 unfollowButton = driver.find_element_by_css_selector('section.zwlfE button')
+
                 if unfollowButton.text != "Follow":
                     unfollowButton.click()
                     confirmButton = driver.find_element_by_xpath('//button[text() = "Unfollow"]')
@@ -76,7 +77,7 @@ class InstagramBot:
                 print() 
 
             mycursor.execute("SET SQL_SAFE_UPDATES = 0")
-            mycursor.execute("DELETE FROM table1 WHERE date = %s AND username = %s", (session_date, user_string,))
+            mycursor.execute("DELETE FROM table1 WHERE date = %s AND username = %s", (session_date, user_string))
             mydb.commit()
 
 #____________________________________________________________TO BE FILLED______________________________________________________________
@@ -85,7 +86,7 @@ class InstagramBot:
 username = "example_username"
 password = "example_password"
 
-session_date = '29_Mar'
+session_date = 'example_date' # For the users that will be unfollower, session_date is the date that they were followed.
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
