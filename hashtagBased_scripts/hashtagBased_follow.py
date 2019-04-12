@@ -6,10 +6,10 @@ import mysql.connector
 import sys
 
 mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
-    password = "freehunterbot",
-    database = "fh_followcount"
+    host = "",
+    user = "",
+    password = "",
+    database = ""
 )
 
 mycursor = mydb.cursor()
