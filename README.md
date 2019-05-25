@@ -4,7 +4,7 @@ A collection of Python scripts that automates Firefox browser to log on to a Ins
 ## Packages/Libraries (that have to be installed)
 #### 1. Selenium
   ```bash
-  pip install selenium
+  pip3 install selenium
   ```
 #### 2. Geckodriver
 Download, according to OS, from [here](https://github.com/mozilla/geckodriver/releases).
