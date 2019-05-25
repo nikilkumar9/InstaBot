@@ -5,6 +5,7 @@ from selenium.webdriver.firefox.options import Options
 import time
 import mysql.connector
 import sys
+import random
 
 
 mydb = mysql.connector.connect(
@@ -15,10 +16,12 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
+print(mydb)
+print()
 
 options = Options()
-# mycursor.execute("DROP TABLE table2")
-# mycursor.execute("CREATE TABLE table2 (date VARCHAR(255), profile VARCHAR(255), follower_number INTEGER (10), follower VARCHAR(255))")
+mycursor.execute("DROP TABLE table2")
+mycursor.execute("CREATE TABLE table2 (date VARCHAR(255), profile VARCHAR(255), follower_number INTEGER (10), follower VARCHAR(255))")
 
 
 def print_same_line(text):
@@ -32,7 +35,7 @@ class InstagramBot:
         self.username = username
         self.password = password
         # Instead of using GUI version of Firefox, use the headless one, for both client and server usecase
-        options.headless = True
+        options.headless = False
         self.driver = webdriver.Firefox(options=options)
 
     def closeBrowser(self):
@@ -52,6 +55,7 @@ class InstagramBot:
         passworword_elem = driver.find_element_by_xpath("//input[@name='password']")
         passworword_elem.clear()
         passworword_elem.send_keys(self.password)
+        time.sleep(1)
         passworword_elem.send_keys(Keys.RETURN)
         time.sleep(2)
 
@@ -66,52 +70,78 @@ class InstagramBot:
         return False
 
 
+    def addLinktoDB(self, follower, profile, count):
+        profileName = follower.find_element_by_css_selector('a').get_attribute('href')
+        print(profileName)
+        print('')
+        slqformula = "INSERT INTO table2 (date, profile, follower_number, follower) VALUES (%s, %s, %s, %s)"
+        follower = (date, profile, count, profileName)
+        mycursor.execute(slqformula, follower)
+        mydb.commit()
+
+
+
     def findFollowers(self, profile):
         driver = self.driver
         followersLink = driver.find_element_by_css_selector('ul li a')
         followersLink.click()
         time.sleep(1.9)
 
-        # Code that was
-        # followersList = self.driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
-        #
-        # followerNames = followersList.find_elements_by_css_selector('a.FPmhX.notranslate._0imsa')
-        # followButton = followersList.find_elements_by_css_selector('button._0mzm-.sqdOP.L3NKy')
-        #
-        # count = 0
-        # for name in followerNames:
-        #     profileName = name.get_attribute('title')
-        #     count = count + 1
-        #     slqformula = "INSERT INTO table2 (date, profile, follower_number, follower) VALUES (%s, %s, %s, %s)"
-        #     follower = (date, profile, count, profileName)
-        #     mycursor.execute(slqformula, follower)
-        #     mydb.commit()
-
-        # Help find the profile follower link and generate the right follower list ul element
         
         # For reason, using "find_element_by_css_selector" will block by other elements, so just going to use JS instead
         driver.execute_script('document.querySelector("a.-nal3").click()')
-        time.sleep(1.9)
+        time.sleep(1.9) 
 
-        followersList = driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
-        followerDiv = followersList.find_elements_by_css_selector('li')
-        print(followerDiv)
+        rangeUpper = (followersPerProfile / 10) + 2
+        rangeUpper = int(rangeUpper) # Converting float data type to integer.
+        for i in range(0, rangeUpper):
+            try:
+                # Scroll follower list far down enough to find at least requested number of user Followers (may not always find).
+                driver.execute_script('''
+                    var fList = document.querySelector('div[role="dialog"] .isgrP');
+                    fList.scrollTop = fList.scrollHeight
+                ''') 
+                time.sleep(1.2)
 
-        count = 0
-        for follower in followerDiv:
-            count = count + 1
-            profileName = follower.find_element_by_css_selector('a').get_attribute('href')
-            print(profileName)
-            print('')
-            slqformula = "INSERT INTO table2 (date, profile, follower_number, follower) VALUES (%s, %s, %s, %s)"
-            follower = (date, profile, count, profileName)
-            mycursor.execute(slqformula, follower)
-            mydb.commit()
+                followersList = driver.find_element_by_css_selector('div[role=\'dialog\'] ul')
+                followerDiv = followersList.find_elements_by_css_selector('li')
+            except Exception:
+                continue
+    
+        # In certain cases, bot will not always find requested number of user Followers, may be higher OR lower than requested number.
+        # If higher.
+        if len(followerDiv) > followersPerProfile:
+            finalFollowerbatch = []
+            count = 0
+            # Put in a new list with cutoff at requested number of user Followers.
+            for follower in followerDiv:
+                if count < followersPerProfile:
+                    finalFollowerbatch.append(follower)
+                else:
+                    break
+                count = count + 1
+
+            count = 0
+            random.choice(finalFollowerbatch) # Randomize array for better variety of users profiles.
+            for follower in finalFollowerbatch:
+                ig.addLinktoDB(follower, profile, count)
+                count = count + 1
+            print(followersPerProfile, "profiles randomly selected from", len(followerDiv))
+
+        # If equal or lower.
+        else:
+            count = 0
+            for follower in followerDiv:
+                ig.addLinktoDB(follower, profile, count)
+                count = count + 1
+            print(len(followerDiv), " profiles selected")
+
 
 
     def followUsers(self, profileName):
         driver = self.driver
         print("Following " + profileName +  "'s followers now")
+        print()
         usersfollowed = 0
 
         select_stmt = "SELECT follower FROM table2 WHERE profile = %(profileName)s"
@@ -140,8 +170,9 @@ class InstagramBot:
 username = "example_username"
 password = "example_password"
 
-profiles = ['gerardpique_fcbarcelona']
-date = '30_Mar'
+profiles = ['example_profile']
+date = '26_May'
+followersPerProfile = 100 # Number of follower profiles to be scraped from user.
 ##______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________

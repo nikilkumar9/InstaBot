@@ -61,7 +61,7 @@ class InstagramBot:
                                 if '.com/p/' in elem.get_attribute('href')]
 
                 unfollowButton = driver.find_element_by_css_selector('section.zwlfE button')
-                if unfollowButton.text != "Follow":
+                if unfollowButton.text != "Follow" and unfollowButton.text != "Follow Back":
                     unfollowButton.click()
                     confirmButton = driver.find_element_by_xpath('//button[text() = "Unfollow"]')
                     confirmButton.click()
@@ -85,7 +85,7 @@ class InstagramBot:
 username = "example_username"
 password = "example_password"
 
-session_date = '28_Feb'
+session_date = '26_May'
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
