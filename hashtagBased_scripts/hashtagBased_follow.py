@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import sys
 import time
 import random
 import mysql.connector
-import sys
 
 mydb = mysql.connector.connect(
     host = "",
@@ -16,8 +16,8 @@ mycursor = mydb.cursor()
 print(mydb)
 print('')
 
-# mycursor.execute("DROP TABLE table1")
-# mycursor.execute("CREATE TABLE table1 (date VARCHAR(255), hashtag VARCHAR(255), number INTEGER (10), username VARCHAR(255))")
+mycursor.execute("DROP TABLE table1")
+mycursor.execute("CREATE TABLE table1 (date VARCHAR(255), hashtag VARCHAR(255), number INTEGER (10), username VARCHAR(255))")
 
 def print_same_line(text):
     sys.stdout.write('\r')
@@ -158,29 +158,41 @@ username = "example_username"
 password = "example_password"
 
 session_date = "example_date"
-photos_per_hashtag = 2
+photos_per_hashtag = 1
 hashtags = ['example_hashtag1', 'example_hashtag2']
+path_to_autoEmail_scripts_file = '/Users/NickKumar/InstaBot/autoEmail_scripts' # Add the path to the autoEmail_script folder on local environment
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 
 
 #________________________________________________________MAIN FUNCTION_________________________________________________________________
+sys.path.append(path_to_autoEmail_scripts_file)
+import autoemail
+
 ig = InstagramBot(username, password)
-ig.login()
+try:
+    ig.login()
 
-# Choose a random tag from the list of tags
-hashtag_count = 0
-hashtags_array_count = len(hashtags)
+    # Choose a random tag from the list of tags
+    hashtag_count = 0
+    hashtags_array_count = len(hashtags)
 
-while (hashtags_array_count > 0):
-    tag = hashtags[hashtag_count]
-    ig.like_photo(tag)
-    ig.follow_user(tag)
-    hashtags_array_count -= 1
-    hashtag_count += 1
-    
-print('InstaBot has COMPLETED liking and following profiles from stated hashtags!')
+    while (hashtags_array_count > 0):
+        tag = hashtags[hashtag_count]
+        ig.like_photo(tag)
+        ig.follow_user(tag)
+        hashtags_array_count -= 1
+        hashtag_count += 1
+
+    subject = "InstaBOT has completed work! (hashtagBased_follow.py)"
+    message = "All users from all hashtags, have been followed SUCCESSFULLY."
+    autoemail.send_email(subject, message)
+
+except:
+    subject = "Something has gone wrong with InstaBOT :( (hashtagBased_follow.py)"
+    message = "BOT may or may not have failed to complete tasks. Re-run same program, if problem still persits, PLEASE TROUBLESHOOT or open issue on Github"
+    autoemail.send_email(subject, message)
+
 ig.closeBrowser()
-time.sleep(1200)
 #______________________________________________________________________________________________________________________________________

@@ -86,14 +86,28 @@ username = "example_username"
 password = "example_password"
 
 session_date = '26_May'
+path_to_autoEmail_scripts_file = '/path/to/autoEmail_script/folder/on/local/desktop' # Add the path to the autoEmail_script folder on local environment
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 
 #________________________________________________________MAIN FUNCTION___________________________________________________________________
+sys.path.append(path_to_autoEmail_scripts_file)
+import autoemail
+
 ig = InstagramBot(username, password)
-ig.login()
-ig.unfollow_user()
+try: 
+    ig.login()
+    ig.unfollow_user()
+
+    subject = "InstaBOT has completed work! (userFolllowersBased_unfollow.py)"
+    message = "All followers from all users, have been unfollowed SUCCESSFULLY."
+    autoemail.send_email(subject, message)
+
+except: 
+    subject = "Something has gone wrong with InstaBOT :( (userFolllowersBased_unfollow.py)"
+    message = "BOT may or may not have failed to complete tasks. Re-run same program, if problem still persits, PLEASE TROUBLESHOOT or open issue on Github"
+    autoemail.send_email(subject, message)
+
 ig.closeBrowser()
-time.sleep(120)
 #______________________________________________________________________________________________________________________________________

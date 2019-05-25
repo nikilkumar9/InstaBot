@@ -173,6 +173,7 @@ password = "example_password"
 profiles = ['example_profile']
 date = '26_May'
 followersPerProfile = 100 # Number of follower profiles to be scraped from user.
+path_to_autoEmail_scripts_file = '/path/to/autoEmail_script/folder/on/local/desktop' # Add the path to the autoEmail_script folder on local environment
 ##______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
 #_______________________________________________________________________________________________________________________________________
@@ -180,14 +181,27 @@ followersPerProfile = 100 # Number of follower profiles to be scraped from user.
 
 
 #________________________________________________________MAIN FUNCTION___________________________________________________________________
-ig = InstagramBot(username, password)
-ig.login()
+sys.path.append(path_to_autoEmail_scripts_file)
+import autoemail
 
-for profileName in profiles:
-    if ig.checkPrivate(profileName):
-        continue
-    ig.findFollowers(profileName)
-    ig.followUsers(profileName)
+ig = InstagramBot(username, password)
+try: 
+    ig.login()
+
+    for profileName in profiles:
+        if ig.checkPrivate(profileName):
+            continue
+        ig.findFollowers(profileName)
+        ig.followUsers(profileName)
+
+    subject = "InstaBOT has completed work! (userFolllowersBased_follow.py)"
+    message = "All followers from all users, have been followed SUCCESSFULLY."
+    autoemail.send_email(subject, message)
+
+except:
+    subject = "Something has gone wrong with InstaBOT :( (userFolllowersBased_follow.py)"
+    message = "BOT may or may not have failed to complete tasks. Re-run same program, if problem still persits, PLEASE TROUBLESHOOT or open issue on Github"
+    autoemail.send_email(subject, message)
 
 ig.closeBrowser()
 #______________________________________________________________________________________________________________________________________
