@@ -4,6 +4,8 @@ import sys
 import time
 import random
 import mysql.connector
+sys.path.append(path_to_autoEmail_scripts_file)
+import autoemail
 
 mydb = mysql.connector.connect(
     host = "",
@@ -160,7 +162,7 @@ password = "example_password"
 session_date = "example_date"
 photos_per_hashtag = 1
 hashtags = ['example_hashtag1', 'example_hashtag2']
-path_to_autoEmail_scripts_file = '/Users/NickKumar/InstaBot/autoEmail_scripts' # Add the path to the autoEmail_script folder on local environment
+path_to_autoEmail_scripts_file = '/path/to/autoEmail_script/folder/' # Add the path to the autoEmail_script folder on local environment
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
 #______________________________________________________________________________________________________________________________________
