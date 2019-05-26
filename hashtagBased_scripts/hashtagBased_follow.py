@@ -4,8 +4,6 @@ import sys
 import time
 import random
 import mysql.connector
-sys.path.append(path_to_autoEmail_scripts_file)
-import autoemail
 
 mydb = mysql.connector.connect(
     host = "",
