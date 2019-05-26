@@ -11,5 +11,6 @@ def send_email(subject, message):
         mailserver.sendmail(logindetails.emailAddress, logindetails.emailAddress, message)
         mailserver.quit()
         print("Task done. Success: Email sent!")
+    
     except:
         print("Task done. Email failed to send.")
