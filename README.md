@@ -10,7 +10,7 @@ A collection of Python scripts that automates Firefox browser to log on to a Ins
 Download, according to OS, from [here](https://github.com/mozilla/geckodriver/releases).
 
 #### ~~ Optional ~~
-The usernames, whose profiles have been followed by the bot, are stored in simple mySQL workbench database. This is optional, feel free to use whatever database you prefer. Connecting the database to the script is fairly simple. 
+The usernames, whose profiles have been followed by the bot, are stored in a simple mySQL workbench database. This is optional, feel free to use whatever database you prefer. Connecting the database to the script is fairly simple. 
 
 For reference, 
 - SQL Community Server download [here](https://dev.mysql.com/downloads/mysql/). (According to OS)
